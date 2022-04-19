@@ -7,24 +7,43 @@ trigger:
 - main
 
 pool:
+  name: Build
+  demands:
+  - msbuild
+  - visualstudio
   vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  Version.MajorMinor: 0.1
+  Version.Revision: $[counter(variables['Version.MajorMinor'], 0)]
+  BuildVersion: $(Version.MajorMinor).$(Version.Revision)
+  namespace: 'SimpleAPI'
 
+  name: $(Version.MajorMinor).$(Version.Revision)
 steps:
 - task: NuGetToolInstaller@1
+  displayName: 'Install NuGet'
 
 - task: NuGetCommand@2
+   displayName: 'Restore Solution'
+
   inputs:
+    command: 'restore'
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
+  displayName: 'Build Solution'
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    msbuildArgs: '
+      /p:DeployOnBuild=true 
+      /p:WebPublishMethod=Package 
+      /p:PackageAsSingleFile=true 
+      /p:SkipInvalidConfigurations=true 
+      /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 

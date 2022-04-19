@@ -32,6 +32,6 @@ public class WeatherForecastController : ControllerBase
 
     [HttpGet("{id}")]
     public ActionResult<string> Get(int id){
-        return "Hello Word!";
+        return "Hello Word";
     }
 }
