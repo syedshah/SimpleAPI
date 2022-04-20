@@ -66,5 +66,5 @@ steps:
     arguments: '--configuration --configuration @(buildConfiguration) -- output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifacts'
+ - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
